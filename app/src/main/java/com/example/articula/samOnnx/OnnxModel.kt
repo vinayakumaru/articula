@@ -25,6 +25,7 @@ class OnnxModel(context: Context) {
         embeddingTensor = OnnxTensor.createTensor(environment,FloatBuffer.wrap(data),shape)
     }
 
+
     fun getMask(x : Float, y : Float, height : Int , width : Int): IntArray? {
         if (embeddingTensor == null) return null
 

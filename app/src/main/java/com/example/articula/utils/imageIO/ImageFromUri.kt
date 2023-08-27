@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
+import androidx.documentfile.provider.DocumentFile
 
 /**
 * This class is used to get a bitmap from an uri
@@ -23,5 +24,11 @@ class ImageFromUri(private val context: Context) {
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun getFileNameFromUri(uri: Uri): String? {
+        val documentFile = DocumentFile.fromSingleUri(context, uri)
+        val fullName = documentFile?.name
+        return fullName?.substringBeforeLast(".")
     }
 }

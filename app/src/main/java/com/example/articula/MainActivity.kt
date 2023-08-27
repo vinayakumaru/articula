@@ -21,10 +21,14 @@ import com.example.articula.utils.editImage.ProcessMask
 import com.example.articula.utils.message.ShowMessage
 import com.example.articula.utils.imageStack.ImageStack
 import com.example.articula.utils.imageIO.ImageFromUri
+import com.example.articula.utils.imageIO.SaveEmbeddings
 import com.example.articula.utils.permission.Permission
 import com.example.articula.utils.scaledCoordinates.ScaledCoordinates
 import com.example.articula.utils.speech.RecognizeSpeech
 import com.example.articula.utils.speech.RecognizeSpeechListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -76,7 +80,9 @@ class MainActivity : AppCompatActivity() {
                     imageStack.clearMask()
                     imageStack.push(it)
                     binding.imageView.setImageBitmap(it)
-                    loadEmbeddings(it)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        loadEmbeddings(it1,it)
+                    }
                 }
             }
         }
@@ -97,18 +103,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadEmbeddings(bitmap: Bitmap) {
-        apiClient.getImageEmbeddings(bitmap,object : ApiCallback<ByteArray>{
-            override fun onResult(t: ByteArray) {
-                val embedding = Embedding.FloatArray.parseFrom(t)
-                val floatArray = embedding.dataList.toFloatArray()
-                val shape = embedding.shapeList.map { it.toLong() }.toLongArray()
-
-                onnxModel.setEmbeddingTensor(floatArray,shape)
-            }
-        })
+    private fun loadEmbeddings(uri: Uri,bitmap: Bitmap) {
+        val filename = "${ImageFromUri(this).getFileNameFromUri(uri)!!}.bin"
+        val byteArray = SaveEmbeddings.getEmbeddings(this,filename)
+        if (byteArray != null) {
+            setEmbeddings(byteArray)
+        }
+        else{
+            apiClient.getImageEmbeddings(bitmap,object : ApiCallback<ByteArray>{
+                override fun onResult(t: ByteArray) {
+                    setEmbeddings(t)
+                    SaveEmbeddings.saveEmbeddings(this@MainActivity,t,filename)
+                }
+            })
+        }
     }
 
+    private fun setEmbeddings(byteArray: ByteArray){
+        val embedding = Embedding.FloatArray.parseFrom(byteArray)
+        val floatArray = embedding.dataList.toFloatArray()
+        val shape = embedding.shapeList.map { it.toLong() }.toLongArray()
+        onnxModel.setEmbeddingTensor(floatArray,shape)
+    }
     @SuppressLint("ClickableViewAccessibility")
     private fun setupImageView(){
         binding.imageView.setOnTouchListener { _, event ->
@@ -131,12 +147,14 @@ class MainActivity : AppCompatActivity() {
 
                 startRippleAnimation(event.x,event.y)
 
-                predictMask(
-                    scaledCoordinates.getX(),scaledCoordinates.getY(),
-                    imageStack.peek().height,imageStack.peek().width
-                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    predictMask(
+                        scaledCoordinates.getX(),scaledCoordinates.getY(),
+                        imageStack.peek().height,imageStack.peek().width
+                    )
+                    clicked = false
+                }
 
-                clicked = false
                 return@setOnTouchListener true
             }
             return@setOnTouchListener false
@@ -145,12 +163,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun predictMask(x: Float, y: Float, height: Int, width: Int){
-
         val mask = onnxModel.getMask(x,y,height,width)
         mask?.let {
             imageStack.setMaskBitmap(ProcessMask.getBinaryMask(it,width,height))
-            Log.d("mask","generated")
-            binding.imageView.setImageBitmap(ProcessMask.addMaskToImage(imageStack.peek(),imageStack.getMaskBitmap()!!))
+            val bitmap = ProcessMask.addMaskToImage(imageStack.peek(),imageStack.getMaskBitmap()!!)
+            runOnUiThread {
+                binding.imageView.setImageBitmap(bitmap)
+            }
         }
     }
 
