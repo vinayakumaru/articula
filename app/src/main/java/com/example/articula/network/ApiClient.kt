@@ -1,11 +1,17 @@
 package com.example.articula.network
 
+import android.content.Context
+import android.graphics.Bitmap
 import com.example.articula.model.Command
 import com.example.articula.model.EditResponse
+import com.example.articula.utils.imageIO.SaveImageInCache
 import com.google.gson.Gson
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,14 +20,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-class ApiClient(baseUrl: String) {
+class ApiClient(private val context: Context,baseUrl: String) {
     private val apiInterface: ApiInterface
     init {
         apiInterface = createApiService(baseUrl)
     }
     private fun createApiService(url : String): ApiInterface {
         val okHttpClient = OkHttpClient.Builder()
-            .readTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
@@ -56,5 +62,24 @@ class ApiClient(baseUrl: String) {
         })
     }
 
+    fun getImageEmbeddings(bitmap: Bitmap,apiCallback : ApiCallback<ByteArray>){
+        val file = SaveImageInCache.getImage(context,bitmap,"image.jpg")
+        val requestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+        val imageFilePart = MultipartBody.Part.createFormData("image", file.name, requestBody)
 
+        val call = apiInterface.getEmbeddings(imageFilePart)
+        call.enqueue(object : Callback<ResponseBody>{
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if(response.isSuccessful){
+                    val result = response.body()?.byteStream()?.use { it.readBytes() }
+                    if (result != null) {
+                        apiCallback.onResult(result)
+                    }
+                }
+            }
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                println("Error: ${t.message}")
+            }
+        })
+    }
 }

@@ -25,7 +25,7 @@ class OnnxModel(context: Context) {
         embeddingTensor = OnnxTensor.createTensor(environment,FloatBuffer.wrap(data),shape)
     }
 
-    fun getMask(x : Float, y : Float, height : Int , width : Int): Bitmap? {
+    fun getMask(x : Float, y : Float, height : Int , width : Int): IntArray? {
         if (embeddingTensor == null) return null
 
         val ortInputs = modelData(
@@ -45,7 +45,7 @@ class OnnxModel(context: Context) {
                 it.value.close()
         }
 
-        return floatArrayToBinaryMask(maskData,width,height)
+        return floatArrayToBitmapStream(maskData,width,height)
     }
 
     private fun modelData(
@@ -108,14 +108,14 @@ class OnnxModel(context: Context) {
         )
     }
 
-    private fun floatArrayToBinaryMask(input: FloatArray, width: Int, height: Int): Bitmap {
+    private fun floatArrayToBitmapStream(input: FloatArray, width: Int, height: Int): IntArray {
         val pixelsBinary = IntArray(width * height)
 
         for (i in input.indices) {
             val value = input[i]
-            pixelsBinary[i] = if (value > 0.0f) Color.argb(255, 255, 255, 255) else Color.argb(255, 0, 0, 0)
+            pixelsBinary[i] = if (value > 0.0f) Color.argb(100, 0, 0, 0) else Color.argb(255, 0, 0, 0)
         }
 
-        return Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        return pixelsBinary
     }
 }

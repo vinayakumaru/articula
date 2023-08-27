@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.RippleDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
@@ -12,10 +13,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import com.example.articula.databinding.ActivityMainBinding
 import com.example.articula.model.EditResponse
+import com.example.articula.model.Embedding
 import com.example.articula.network.ApiCallback
 import com.example.articula.network.ApiClient
 import com.example.articula.samOnnx.OnnxModel
-import com.example.articula.utils.editImage.AddMaskToImage
+import com.example.articula.utils.editImage.ProcessMask
 import com.example.articula.utils.message.ShowMessage
 import com.example.articula.utils.imageStack.ImageStack
 import com.example.articula.utils.imageIO.ImageFromUri
@@ -29,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     private lateinit var recognizeSpeech: RecognizeSpeech
     private val imageStack = ImageStack()
-    private val apiClient = ApiClient(BuildConfig.BASE_URL)
+    private val apiClient = ApiClient(this,BuildConfig.BASE_URL)
     private val onnxModel : OnnxModel by lazy { OnnxModel(this) }
     private var clicked = false
 
@@ -95,8 +97,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadEmbeddings(it: Bitmap) {
-        apiClient
+    private fun loadEmbeddings(bitmap: Bitmap) {
+        apiClient.getImageEmbeddings(bitmap,object : ApiCallback<ByteArray>{
+            override fun onResult(t: ByteArray) {
+                val embedding = Embedding.FloatArray.parseFrom(t)
+                val floatArray = embedding.dataList.toFloatArray()
+                val shape = embedding.shapeList.map { it.toLong() }.toLongArray()
+
+                onnxModel.setEmbeddingTensor(floatArray,shape)
+            }
+        })
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -135,10 +145,12 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun predictMask(x: Float, y: Float, height: Int, width: Int){
+
         val mask = onnxModel.getMask(x,y,height,width)
         mask?.let {
-            imageStack.setMaskBitmap(it)
-            binding.imageView.setImageBitmap(AddMaskToImage.addMaskToImage(imageStack.peek(),it))
+            imageStack.setMaskBitmap(ProcessMask.getBinaryMask(it,width,height))
+            Log.d("mask","generated")
+            binding.imageView.setImageBitmap(ProcessMask.addMaskToImage(imageStack.peek(),imageStack.getMaskBitmap()!!))
         }
     }
 
