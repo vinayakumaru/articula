@@ -14,7 +14,7 @@ import retrofit2.http.Part
 interface ApiInterface {
 
     @Headers("Content-Type: application/json")
-    @POST("/processCommand")
+    @POST("/getType")
     fun sendCommand(@Body command: RequestBody): Call<EditResponse>
 
     @Multipart

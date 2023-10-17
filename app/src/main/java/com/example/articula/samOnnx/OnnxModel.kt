@@ -21,8 +21,12 @@ class OnnxModel(context: Context) {
     }
 
     fun setEmbeddingTensor(data: FloatArray,shape: LongArray){
-        embeddingTensor?.close()
         embeddingTensor = OnnxTensor.createTensor(environment,FloatBuffer.wrap(data),shape)
+    }
+
+    fun closeEmbeddingTensor(){
+        embeddingTensor?.close()
+        embeddingTensor = null
     }
 
 
@@ -114,7 +118,7 @@ class OnnxModel(context: Context) {
 
         for (i in input.indices) {
             val value = input[i]
-            pixelsBinary[i] = if (value > 0.0f) Color.argb(100, 0, 0, 0) else Color.argb(255, 0, 0, 0)
+            pixelsBinary[i] = if (value > 0.0f) 1 else 0
         }
 
         return pixelsBinary

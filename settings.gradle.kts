@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Articula"
 include(":app")
+include(":opencv")

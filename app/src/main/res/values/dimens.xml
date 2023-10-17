@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="floating_action_button_bottom_margin">12dp</dimen>
+    <dimen name="floating_action_button_horizontal_margin">10dp</dimen>
+    <dimen name="linear_layout_vertical_margin">5dp</dimen>
+    <dimen name="bottom_sheet_peek_height">40dp</dimen>
+    <dimen name="bottom_sheet_empty_view_margin_top">20dp</dimen>
+    <dimen name="operation_button_horizontal_margin">5dp</dimen>
+    <dimen name="operation_button_height">60dp</dimen>
+    <dimen name="operation_button_width">0dp</dimen>
+    <dimen name="operation_button_text_size">12sp</dimen>
+    <dimen name="progress_bar_margin_top">20dp</dimen>
+    <dimen name="mic_button_margin_bottom">50dp</dimen>
+    <dimen name="mic_button_margin_end">20dp</dimen>
+    <dimen name="ripple_touch_view_width">60dp</dimen>
+    <dimen name="ripple_touch_view_height">60dp</dimen>
+    <dimen name="info_card_view_corner_radius">15dp</dimen>
+    <dimen name="info_card_view_elevation">10dp</dimen>
+    <dimen name="info_card_view_margin_vertical">45dp</dimen>
+    <dimen name="info_card_view_margin_horizontal">20dp</dimen>
+    <dimen name="info_linear_layout_padding">20dp</dimen>
+    <dimen name="linear_layout_mic_slider_margin_bottom">50dp</dimen>
+    <dimen name="linear_layout_mic_slider_padding_horizontal">20dp</dimen>
+    <dimen name="slider_margin_end">10dp</dimen>
+</resources>

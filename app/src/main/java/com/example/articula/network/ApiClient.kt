@@ -54,10 +54,17 @@ class ApiClient(private val context: Context,baseUrl: String) {
                     if (editResponse != null) {
                         callback.onResult(editResponse)
                     }
+                    else{
+                        callback.onError("No result")
+                    }
+                }
+                else{
+                    callback.onError(response.message())
                 }
             }
             override fun onFailure(call: Call<EditResponse>, t: Throwable) {
                 println("Error: ${t.message}")
+                callback.onError(t.message.toString())
             }
         })
     }
@@ -75,10 +82,17 @@ class ApiClient(private val context: Context,baseUrl: String) {
                     if (result != null) {
                         apiCallback.onResult(result)
                     }
+                    else{
+                        apiCallback.onError("No result")
+                    }
+                }
+                else{
+                    apiCallback.onError(response.message())
                 }
             }
             override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                 println("Error: ${t.message}")
+                apiCallback.onError(t.message.toString())
             }
         })
     }

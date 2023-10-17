@@ -1,75 +1,271 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-<!--    <com.google.android.material.textview.MaterialTextView-->
-<!--        android:id="@+id/tv_app"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/app_name"-->
-<!--        android:textSize="30sp"-->
-<!--        android:textStyle="bold"-->
-<!--        app:fontFamily="monospace"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_alignParentTop="true"-->
-<!--        android:layout_marginTop="50dp"-->
-<!--        android:translationZ="1dp"-->
-<!--        />-->
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/image_view"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!--    <com.google.android.material.textview.MaterialTextView-->
+        <!--        android:id="@+id/tv_app"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:text="@string/app_name"-->
+        <!--        android:textSize="30sp"-->
+        <!--        android:textStyle="bold"-->
+        <!--        app:fontFamily="monospace"-->
+        <!--        android:layout_centerHorizontal="true"-->
+        <!--        android:layout_alignParentTop="true"-->
+        <!--        android:layout_marginTop="50dp"-->
+        <!--        android:translationZ="1dp"-->
+        <!--        />-->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:src="@drawable/round_image_24" />
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/outline_info_24"
+            android:translationZ="2dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/progress_bar_margin_top"
+            android:translationZ="2dp"
+            android:visibility="gone" />
+
+        <View
+            android:id="@+id/rippleView"
+            android:layout_width="@dimen/ripple_touch_view_width"
+            android:layout_height="@dimen/ripple_touch_view_height"
+            android:foreground="@drawable/ripple_effect"
+            android:translationZ="2dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:translationZ="2dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/linear_layout_mic_slider_margin_bottom"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/linear_layout_mic_slider_padding_horizontal"
+            >
+            <com.google.android.material.slider.Slider
+                android:id="@+id/slider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:valueFrom="-10"
+                android:stepSize="1"
+                android:value="0"
+                app:labelBehavior="withinBounds"
+                android:valueTo="10"
+                android:layout_marginEnd="@dimen/slider_margin_end"
+                android:contentDescription="@string/slider"
+                android:visibility="invisible"
+                />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/mic_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:contentDescription="@string/mic"
+                android:src="@drawable/round_mic_off_24"
+                />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardViewInfo"
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerVertical="true"
-        android:src="@drawable/round_image_24"
-        />
-
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/mic_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="30dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:src="@drawable/round_mic_off_24"
-        android:contentDescription="@string/add"
-        android:translationZ="2dp"
-        />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="20dp"
-        android:clickable="true"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="@string/mic"
-        android:translationZ="2dp"
-        />
-
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:id="@+id/progressBar"
+        android:layout_marginHorizontal="@dimen/info_card_view_margin_horizontal"
+        android:layout_marginVertical="@dimen/info_card_view_margin_vertical"
         android:visibility="gone"
-        android:translationZ="3dp"
-        />
+        app:cardCornerRadius="@dimen/info_card_view_corner_radius"
+        app:cardElevation="@dimen/info_card_view_elevation">
 
-    <View
-        android:id="@+id/rippleView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:foreground="@drawable/ripple_effect"
-        android:translationZ="4dp"
-        />
-</RelativeLayout>
+        <LinearLayout
+            style="@style/Widget.Material3.CardView.Elevated"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/info_linear_layout_padding">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/information"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="@string/info"
+                android:textSize="20sp" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        style="@style/Widget.Material3.BottomSheet.Modal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:behavior_draggable="true"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/bottom_sheet_peek_height"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/bottom_sheet_empty_view_margin_top" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/linear_layout_vertical_margin"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/undo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/floating_action_button_horizontal_margin"
+                android:layout_marginBottom="@dimen/floating_action_button_bottom_margin"
+                android:clickable="true"
+                android:contentDescription="@string/undo"
+                android:src="@drawable/round_undo_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/redo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/floating_action_button_horizontal_margin"
+                android:layout_marginBottom="@dimen/floating_action_button_bottom_margin"
+                android:clickable="true"
+                android:contentDescription="@string/redo"
+                android:src="@drawable/round_redo_24" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/floating_action_button_horizontal_margin"
+                android:layout_marginBottom="@dimen/floating_action_button_bottom_margin"
+                android:clickable="true"
+                android:contentDescription="@string/add"
+                android:src="@android:drawable/ic_input_add" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/floating_action_button_horizontal_margin"
+                android:layout_marginBottom="@dimen/floating_action_button_bottom_margin"
+                android:clickable="true"
+                android:contentDescription="@string/save"
+                android:src="@drawable/round_save_24" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/linear_layout_vertical_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/brightness_button"
+                android:layout_width="@dimen/operation_button_width"
+                android:layout_height="@dimen/operation_button_height"
+                android:layout_marginHorizontal="@dimen/operation_button_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/brightness"
+                android:textSize="@dimen/operation_button_text_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/saturation_button"
+                android:layout_width="@dimen/operation_button_width"
+                android:layout_height="@dimen/operation_button_height"
+                android:layout_marginHorizontal="@dimen/operation_button_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/saturation"
+                android:textSize="@dimen/operation_button_text_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/contrast_button"
+                android:layout_width="@dimen/operation_button_width"
+                android:layout_height="@dimen/operation_button_height"
+                android:layout_marginHorizontal="@dimen/operation_button_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/contrast"
+                android:textSize="@dimen/operation_button_text_size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/linear_layout_vertical_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/hue_button"
+                android:layout_width="@dimen/operation_button_width"
+                android:layout_height="@dimen/operation_button_height"
+                android:layout_marginHorizontal="@dimen/operation_button_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/hue"
+                android:textSize="@dimen/operation_button_text_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rotate_button"
+                android:layout_width="@dimen/operation_button_width"
+                android:layout_height="@dimen/operation_button_height"
+                android:layout_marginHorizontal="@dimen/operation_button_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/rotate"
+                android:textSize="@dimen/operation_button_text_size" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/flip_button"
+                android:layout_width="@dimen/operation_button_width"
+                android:layout_height="@dimen/operation_button_height"
+                android:layout_marginHorizontal="@dimen/operation_button_horizontal_margin"
+                android:layout_weight="1"
+                android:text="@string/flip"
+                android:textSize="@dimen/operation_button_text_size" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
 

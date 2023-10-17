@@ -7,6 +7,12 @@ android {
     namespace = "com.example.articula"
     compileSdk = 33
 
+//    splits {
+//        abi {
+//            reset()
+//            include("arm64-v8a")
+//        }
+//    }
     defaultConfig {
         applicationId = "com.example.articula"
         minSdk = 29
@@ -19,10 +25,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.0.119:5000/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.24.92:5000/\"")
         }
         release {
-            buildConfigField("String", "BASE_URL", "\"http://192.168.0.119:5000/\"")
+            buildConfigField("String", "BASE_URL", "\"http://192.168.24.92:5000/\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -50,6 +56,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation(project(mapOf("path" to ":opencv")))
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
